@@ -1,6 +1,8 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from .models import Task
 from .forms import TaskForm
+from django.shortcuts import reverse
 
 
 def index(request):
@@ -16,7 +18,7 @@ def create(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return HttpResponseRedirect(reverse('main:home'))
         else:
             error = 'Форма неверная'
 
@@ -26,3 +28,8 @@ def create(request):
         'error': error
     }
     return render(request, 'main/create.html', context)
+
+
+def delete(request):
+    Task.objects.all().delete()
+    return HttpResponseRedirect(reverse('main:home'))
